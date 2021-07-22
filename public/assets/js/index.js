@@ -4,8 +4,6 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-// const notesButton = document.getelementById('notes-btn');
-
 // When the 'notes' file path is shown, the notes sections of the HTML will appear
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
