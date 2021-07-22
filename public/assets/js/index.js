@@ -30,7 +30,7 @@ let activeNote = {};
 
 //Fetches the notes api to show all existing notes in the front-end
 const getNotes = () =>
-  fetch('http://localhost:3001/api/notes', {
+  fetch('/api/notes', {
     method: 'GET', // or 'PUT'
     headers: {
       'Content-Type': 'application/json',
@@ -56,10 +56,11 @@ const saveNote = (note) =>
   })
     .then((response) => response.json())
     .then((data) => {
-      alert(data);
+      console.log('Successful POST request:', data);
+      return data;
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Error in POST request:', error);
     });
 
 // Fetches the notes api to delete notes that already exist in the db.json file
@@ -89,16 +90,25 @@ const renderActiveNote = () => {
 };
 
 //Saves any new notes values 
-const handleNoteSave = () => {
+const handleNoteSave = (e) => {
+  // e.preventDefault();
+
+  // Get the values of the note title and note text and saves them to variables
+  const newnoteTitle = noteTitle.value.trim();
+  const newnoteText = noteText.value.trim();
+
   const newNote = {
-    title: noteTitle.value,
-    text: noteText.value,
+    title: newnoteTitle,
+    text: newnoteText,
   };
-  saveNote(newNote).then(() => {
-    //Renders notes to side bar
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+
+  saveNote(newNote)
+  .then((data) => alert(`Note added! Note ID: ${data.body.note_id}`))
+  .catch((err) => console.error(err));
+  
+  //Renders notes to side bar
+  getAndRenderNotes();
+  renderActiveNote();
 };
 
 // Delete the clicked note
