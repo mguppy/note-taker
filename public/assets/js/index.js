@@ -36,7 +36,7 @@ const getNotes = () =>
     // body: JSON.stringify(data),
   })
     .then((response) => response.json())
-    .then((data) => data)
+    .then((data) => {return data})
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -88,7 +88,7 @@ const renderActiveNote = () => {
 };
 
 //Saves any new notes values 
-const handleNoteSave = (e) => {
+const handleNoteSave = () => {
   // e.preventDefault();
 
   // Get the values of the note title and note text and saves them to variables

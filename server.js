@@ -1,11 +1,12 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 const fs = require('fs');
 const util = require('util');
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
 // const noteData = require('./db/db.json');
 const PORT = process.env.PORT || 3001;
+const db = require('./db/db.json');
 
 const app = express();
 
@@ -62,9 +63,12 @@ app.get('/api/notes', (req, res) => {
     console.info(`${req.method} request received for notes`);
     readFromFile('./db/db.json').then((data) => 
     {
-        res.json(JSON.parse(data));
+        const orgNotes = [].concat(JSON.parse(data));
+        res.json(orgNotes);
+        return orgNotes;
         // var arrayofObjects = JSON.parse(data);
         // console.log(arrayofObjects);
+        
     }
     );
     
@@ -113,11 +117,22 @@ app.post('/api/notes', (req, res) => {
         };
 
         console.log(response);
-        res.json(response);
+        res.sendFile(db);
     } else {
         res.json('Error in posting note');
     }
 });
+});
+
+// Delete Route to delete note by note_id key
+app.delete('./api/notes/:note_id', (req, res) => {
+    console.info(`${req.method} request received to delete a note`);
+    console.log(req.params.note_id);
+
+    readFromFile('./db/db.json').then((data) =>{
+        data.filter(res => res.note_id !== id)
+        .then(newArray => this.writeFileSync(newArray));
+    });
 });
 
 app.listen(PORT, () => {
