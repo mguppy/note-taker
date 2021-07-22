@@ -4,7 +4,7 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-// When the 'notes' file path is shown, the notes sections of the HTML will appear
+// When the 'notes' file path is shown, the notes sections of the HTML will appear 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
@@ -26,24 +26,16 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-//Fetches the notes api to show all existing notes in the front-end
+//Fetches the notes api to add new notes to the db.json file 
 const getNotes = () =>
   fetch('/api/notes', {
-    method: 'GET', // or 'PUT'
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
-    // body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {return data})
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+  });
 
-
-
-//Fetches the notes api to add new notes to the db.json file
+//Fetches the notes api to add new notes to the db.json file 
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
@@ -51,17 +43,9 @@ const saveNote = (note) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(note),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Successful POST request:', data);
-      return data;
-    })
-    .catch((error) => {
-      console.error('Error in POST request:', error);
-    });
+  });
 
-// Fetches the notes api to delete notes that already exist in the db.json file
+// Fetches the notes api to delete notes that already exist in the db.json file 
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
@@ -69,7 +53,6 @@ const deleteNote = (id) =>
       'Content-Type': 'application/json',
     },
   });
-
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -87,26 +70,16 @@ const renderActiveNote = () => {
   }
 };
 
-//Saves any new notes values 
+//Saves any new notes values  
 const handleNoteSave = () => {
-  // e.preventDefault();
-
-  // Get the values of the note title and note text and saves them to variables
-  const newnoteTitle = noteTitle.value.trim();
-  const newnoteText = noteText.value.trim();
-
   const newNote = {
-    title: newnoteTitle,
-    text: newnoteText,
+    title: noteTitle.value,
+    text: noteText.value,
   };
-
-  saveNote(newNote)
-  .then((data) => alert(`Note added! Note ID: ${data.body.note_id}`))
-  .catch((err) => console.error(err));
-  
-  //Renders notes to side bar
-  getAndRenderNotes();
-  renderActiveNote();
+  saveNote(newNote).then(() => {
+    getAndRenderNotes();
+    renderActiveNote();
+  });
 };
 
 // Delete the clicked note
@@ -121,9 +94,7 @@ const handleNoteDelete = (e) => {
     activeNote = {};
   }
 
-  //Deletes note by using the note ID
   deleteNote(noteId).then(() => {
-    //Renders notes to side bar
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -142,7 +113,7 @@ const handleNewNoteView = (e) => {
   renderActiveNote();
 };
 
-//Show or hide save button based on if there is a value in the note title or note value boxes
+//Show or hide save button based on if there is a value in the note title or note value boxes 
 const handleRenderSaveBtn = () => {
   if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
@@ -153,9 +124,9 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  let jsonNotes = await notes;
+  let jsonNotes = await notes.json();
   if (window.location.pathname === '/notes') {
-    noteList.forEach(() => (noteTitle.innerHTML = ''));
+    noteList.forEach((el) => (el.innerHTML = ''));
   }
 
   let noteListItems = [];
