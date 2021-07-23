@@ -31,15 +31,21 @@ app.get('/notes', (req, res) => {
 
 //GET Route for retrieving all the notes
 app.get('/api/notes', (req, res) => {
+    //Console logging which method and that it was successful
     console.log(`${req.method} request received for notes`, req.body);
+    //Response sent to client side
     res.send(db);
 });
 
 // POST Route for a new note
 app.post('/api/notes', (req, res) => {
+    //Console logging which method and that it was successful
     console.log(`${req.method} request received for notes`, req.body);
+    //Pushing what was entered on the front end by the user to the array of JSON objects
     db.push( {title: req.body.title, text: req.body.text, id: uuid()});
+    //Writing the new object to the the json file in the database folder
     fs.writeFileSync('./db/db.json', JSON.stringify(db));
+    //Ends response
     res.end();
 })
 
@@ -94,9 +100,13 @@ app.post('/api/notes', (req, res) => {
 
 // Delete Route to delete note by note_id key
 app.delete('/api/notes/:id', (req, res) => {
+    //Console logging which method and that it was successful
     console.log(`${req.method} request received for notes`, req.params.id);
+    //Sets the db.json equal to the new file with the note id that was clicked filtered out
     db = db.filter(entry => (entry.id != req.params.id));
+    //Writes the new file to the db.json file file with the clicked id filtered out
     fs.writeFileSync('./db/db.json', JSON.stringify(db));
+    //End response
     res.end();
 })
 
